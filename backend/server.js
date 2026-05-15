@@ -1,8 +1,11 @@
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
+import rateLimit from "express-rate-limit";
 import connectDB from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.route.js";
 import noteRoutes from "./src/routes/notes.route.js";
+import sharedRoute from "./src/routes/shared.route.js";
 
 const app = express();
 dotenv.config();
@@ -30,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/shared", sharedRoute);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
