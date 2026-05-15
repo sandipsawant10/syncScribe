@@ -1,5 +1,5 @@
 import express from "express";
-import { getSharedNote } from "../controllers/share.controller";
+import { getSharedNote } from "../controllers/share.controller.js";
 
 const router = express.Router();
 

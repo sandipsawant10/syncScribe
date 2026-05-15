@@ -1,11 +1,23 @@
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.AI_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-});
+const getClient = () => {
+  const apiKey =  process.env.AI_API_KEY;
+
+  if (!apiKey) {
+    throw new Error(
+      "Missing OpenAI API key. Set OPENAI_API_KEY in the environment.",
+    );
+  }
+
+  return new OpenAI({
+    apiKey,
+    baseURL: "https://openrouter.ai/api/v1",
+  });
+};
 
 const generateAISummary = async (title, content) => {
+  const client = getClient();
+
   const prompt = `
 You are a helpful assistant that analyzes notes and extracts useful information.
 

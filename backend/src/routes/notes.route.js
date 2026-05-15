@@ -1,5 +1,5 @@
 import express from "express";
-import { protect } from "../middleware/auth";
+import { protect } from "../middleware/auth.js";
 import {
   getNotes,
   getNote,
@@ -8,7 +8,7 @@ import {
   deleteNote,
   generateSummary,
   toggleShare,
-} from "../controllers/note.controller";
+} from "../controllers/note.controller.js";
 
 const router = express.Router();
 

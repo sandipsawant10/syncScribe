@@ -6,6 +6,7 @@ import connectDB from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.route.js";
 import noteRoutes from "./src/routes/notes.route.js";
 import sharedRoute from "./src/routes/shared.route.js";
+import dashboardRoute from "./src/routes/dashboard.route.js";
 
 const app = express();
 dotenv.config();
@@ -34,9 +35,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/shared", sharedRoute);
+app.use("/api/dashboard", dashboardRoute);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+//Global error handler
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  res.status(err.status || 500).json({
+    error: err.message || "Something went wrong on our end",
+  });
 });
 
 const PORT = process.env.PORT || 5000;
