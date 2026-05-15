@@ -19,6 +19,8 @@ const protect = async (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({ error: "User no longer exists." });
     }
+    // proceed to next middleware/handler
+    return next();
   } catch (error) {
     return res.status(401).json({ error: "Invalid or expired token." });
   }

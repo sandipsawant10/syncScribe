@@ -69,11 +69,10 @@ noteSchema.index({
 });
 
 // Auto-update lastEditedAt on content/title change
-noteSchema.pre("save", function (next) {
+noteSchema.pre("save", function () {
   if (this.isModified("content") || this.isModified("title")) {
     this.lastEditedAt = Date.now();
   }
-  next();
 });
 
 //Generate share ID

@@ -52,6 +52,7 @@ const getNote = async (req, res) => {
 
     res.json({ note });
   } catch (error) {
+    console.error("Get note error:", error);
     res.status(500).json({ error: "Failed to fetch note." });
   }
 };
