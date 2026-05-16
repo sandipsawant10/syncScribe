@@ -5,9 +5,20 @@ const getDashboard = async (req, res) => {
   try {
     const userId = req.user._id;
 
+    const toLocalDateKey = (dateValue) => {
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return null;
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    };
+
     const [totalNotes, archivedNotes, recentNotes, allNotes, user] =
       await Promise.all([
-        Note.countDocuments({ user: userId, isArchived: false }),
+        Note.countDocuments({ user: userId }),
         Note.countDocuments({ user: userId, isArchived: true }),
         Note.find({ user: userId, isArchived: false })
           .sort("-lastEditedAt")
@@ -15,7 +26,7 @@ const getDashboard = async (req, res) => {
           .select("title tags lastEditedAt")
           .lean(),
         Note.find({ user: userId })
-          .select("tags createdAt isArchived isPublic")
+          .select("tags createdAt lastEditedAt isArchived isPublic")
           .lean(),
         User.findById(userId).select("aiUsageCount createdAt"),
       ]);
@@ -41,13 +52,15 @@ const getDashboard = async (req, res) => {
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      const key = d.toISOString().split("T")[0];
+      const key = toLocalDateKey(d);
       weeklyActivity[key] = 0;
     }
 
     allNotes.forEach((note) => {
-      const day = new Date(note.createAt).toISOString().split("T")[0];
-      if (weeklyActivity.hasOwnProperty(day)) {
+      const day = toLocalDateKey(note.lastEditedAt || note.createdAt);
+      if (!day) return;
+
+      if (Object.prototype.hasOwnProperty.call(weeklyActivity, day)) {
         weeklyActivity[day]++;
       }
     });

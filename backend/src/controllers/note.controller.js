@@ -14,8 +14,13 @@ const getNotes = async (req, res) => {
 
     const query = {
       user: req.user._id,
-      isArchived: archived === "true" ? true : false,
     };
+
+    if (archived === "true") {
+      query.isArchived = true;
+    } else if (archived === "false") {
+      query.isArchived = false;
+    }
 
     if (tag) query.tags = { $in: [tag] };
     if (category) query.category = category;
