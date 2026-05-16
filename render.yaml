@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: syncscribe-api
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: CLIENT_URL
+        sync: false
